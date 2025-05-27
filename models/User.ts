@@ -5,7 +5,7 @@ import crypto from 'crypto';
 
 // Define User attributes
 interface UserAttributes {
-  id: string; // UUID as string
+  id: number; // UUID as string
   name: string;
   email: string;
   password: string;
@@ -34,7 +34,7 @@ export interface UserInstance extends Model<UserAttributes, UserCreationAttribut
 // Extend Model interface to include custom methods
 declare module 'sequelize' {
   interface Model {
-    id: string;
+    id: number;
     password: string;
     matchPassword(enteredPassword: string): Promise<boolean>;
     createResetToken(): Promise<string>;

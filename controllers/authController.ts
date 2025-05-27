@@ -21,11 +21,11 @@ interface ResetPasswordRequest extends Request {
 }
 
 // Generate JWT token
-const generateToken = (id: string): string => {
+const generateToken = (id: number): string => {
   const options: SignOptions = {
     expiresIn: (process.env.JWT_EXPIRES_IN || '30d') as jwt.SignOptions['expiresIn'],
   };
-  return jwt.sign({ id }, process.env.JWT_SECRET as string, options);
+  return jwt.sign({ id: id.toString() }, process.env.JWT_SECRET as string, options);
 };
 
 // @desc    Register a new user

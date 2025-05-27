@@ -5,7 +5,7 @@ import crypto from 'crypto';
 
 // Define User attributes
 interface UserAttributes {
-  id: number; // UUID as string
+  id: number; 
   name: string;
   email: string;
   password: string;
@@ -15,13 +15,6 @@ interface UserAttributes {
 
 // Define creation attributes (id, createdAt, updatedAt are optional)
 interface UserCreationAttributes extends Optional<UserAttributes, 'id' | 'createdAt' | 'updatedAt'> {}
-
-// Declare custom methods on Model prototype
-declare global {
-  interface Function {
-    prototype: any;
-  }
-}
 
 // Define User instance with custom methods
 export interface UserInstance extends Model<UserAttributes, UserCreationAttributes>,
@@ -45,11 +38,11 @@ declare module 'sequelize' {
 // Define User model type with static methods
 interface UserModel extends ModelStatic<UserInstance> {
   findByEmail(email: string): Promise<UserInstance | null>;
-  findResetToken(token: string): Promise<{ user_id: string } | null>;
+  findResetToken(token: string): Promise<{ user_id: number } | null>; 
   deleteResetToken(token: string): Promise<void>;
 }
 
-// Use Sequelize.QueryTypes from the import, not from the instance
+// Use Sequelize.QueryTypes from the import
 const { QueryTypes } = require('sequelize');
 
 // Define User model
@@ -57,8 +50,8 @@ const User = sequelize.define<UserInstance>(
   'User',
   {
     id: {
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
       primaryKey: true,
     },
     name: {
@@ -133,7 +126,7 @@ User.prototype.createResetToken = async function (): Promise<string> {
 };
 
 // Static method to find a reset token
-User.findResetToken = async function (token: string): Promise<{ user_id: string } | null> {
+User.findResetToken = async function (token: string): Promise<{ user_id: number } | null> {
   try {
     const results = (await sequelize.query(
       'SELECT user_id, token FROM password_reset_tokens WHERE expires_at > CURRENT_TIMESTAMP',

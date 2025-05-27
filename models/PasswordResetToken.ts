@@ -5,7 +5,7 @@ import User from './User';
 // Define attributes
 interface PasswordResetTokenAttributes {
   id: number;
-  user_id: string; // UUID as string to match User.id
+  user_id: number; 
   token: string;
   expires_at: Date;
   createdAt?: Date;
@@ -15,7 +15,7 @@ interface PasswordResetTokenAttributes {
 interface PasswordResetTokenCreationAttributes extends Optional<PasswordResetTokenAttributes, 'id' | 'createdAt' | 'updatedAt'> {}
 
 export interface PasswordResetTokenInstance extends Model<PasswordResetTokenAttributes, PasswordResetTokenCreationAttributes> {
-    dataValues: PasswordResetTokenAttributes;
+  dataValues: PasswordResetTokenAttributes;
 }
 
 const PasswordResetToken = sequelize.define<PasswordResetTokenInstance>(
@@ -27,7 +27,7 @@ const PasswordResetToken = sequelize.define<PasswordResetTokenInstance>(
       primaryKey: true,
     },
     user_id: {
-      type: DataTypes.UUID,
+      type: DataTypes.INTEGER,
       allowNull: false,
       references: {
         model: 'Users',

@@ -2,8 +2,9 @@ import { Model, DataTypes, Optional } from 'sequelize';
 import { sequelize } from '../config/db';
 import User from './User';
 
+// Define Post attributes
 interface PostAttributes {
-  id: number;
+  id: number; 
   title: string;
   body: string;
   authorId: number;
@@ -11,45 +12,48 @@ interface PostAttributes {
   updatedAt?: Date;
 }
 
-interface PostCreationAttributes extends Optional<PostAttributes, 'id'> {}
+// Define creation attributes (id, createdAt, updatedAt are optional)
+interface PostCreationAttributes extends Optional<PostAttributes, 'id' | 'createdAt' | 'updatedAt'> {}
 
-export interface Post extends Model<PostAttributes, PostCreationAttributes> {}
+// Define Post instance type
+export interface Post extends Model<PostAttributes, PostCreationAttributes>, PostAttributes {}
 
+// Define Post model
 const Post = sequelize.define<Post>(
   'Post',
   {
     id: {
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
-      primaryKey: true
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      primaryKey: true,
     },
     title: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
     },
     body: {
       type: DataTypes.TEXT,
-      allowNull: false
+      allowNull: false,
     },
     authorId: {
-      type: DataTypes.UUID,
-      allowNull: false
-    }
+      type: DataTypes.INTEGER, 
+      allowNull: false,
+    },
   },
   {
-    timestamps: true
+    timestamps: true,
   }
 );
 
 // Define relationship between Post and User
 Post.belongsTo(User, {
   foreignKey: 'authorId',
-  as: 'author'
+  as: 'author',
 });
 
 User.hasMany(Post, {
   foreignKey: 'authorId',
-  as: 'posts'
+  as: 'posts',
 });
 
 export default Post;

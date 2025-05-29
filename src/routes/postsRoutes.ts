@@ -5,18 +5,18 @@ import {
   getPostById,
   updatePost,
   deletePost
-} from '../controllers/postsController';
-import { protect, isAuthor } from '../middleware/auth';
+} from '../controllers/post.controller';
+import { authorize, isAuthor } from '../middleware/authorize';
 
 const router = express.Router();
 
 router.route('/posts')
-  .post(protect, createPost)
+  .post(authorize, createPost)
   .get(getPosts);
 
 router.route('/posts/:id')
   .get(getPostById)
-  .put(protect, isAuthor, updatePost)
-  .delete(protect, isAuthor, deletePost);
+  .put(authorize, isAuthor, updatePost)
+  .delete(authorize, isAuthor, deletePost);
 
 export default router;
